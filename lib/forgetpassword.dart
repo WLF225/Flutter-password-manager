@@ -1,7 +1,7 @@
 import 'package:finalproject/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/dao.dart';
-import 'package:finalproject/mainpage.dart';
+
 class ForgetPassword extends StatelessWidget {
   const ForgetPassword({super.key});
 
