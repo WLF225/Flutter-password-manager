@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(
           content: Text("Fields can't be empty"),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.redAccent,
         ),
       );
       return;
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(
           content: Text('Username or Password are wrong!'),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.redAccent,
         ),
       );
       return;
