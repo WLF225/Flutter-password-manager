@@ -19,7 +19,7 @@ class _CreateAccountState extends State<CreateAccount> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  void _createAccount() {
+  Future<void> _createAccount() async {
     String username = _usernameController.text;
     String password = _passwordController.text;
     String confirmPassword = _confirmPasswordController.text;
@@ -50,6 +50,27 @@ class _CreateAccountState extends State<CreateAccount> {
     Dao dao = Dao();
 
     password = BCrypt.hashpw(password, BCrypt.gensalt());
+    if(!await dao.isUniqueUsername(username)){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('This username is used!'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if(!await dao.isUniqueEmail(email)){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('This email is used!'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
 
     dao.addUser(User(username: username, password: password, email: email));
     Navigator.pop(context);

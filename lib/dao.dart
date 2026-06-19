@@ -33,6 +33,16 @@ class Dao {
     return await isar.users.filter().emailEqualTo(email).findFirst();
   }
 
+  Future<bool> isUniqueUsername(String? username) async {
+    User? user = await getUserByUsername(username!);
+    return user == null;
+  }
+
+  Future<bool> isUniqueEmail(String? email) async {
+    User? user = await getUserByEmail(email!);
+    return user == null;
+  }
+
   Future<void> updatePassword(String username, String newPassword) async {
     final isar = await db;
     final user = await isar.users
