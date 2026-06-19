@@ -5,8 +5,13 @@ part 'user.g.dart';
 @collection
 class User {
   Id id = Isar.autoIncrement;
+
+  @Index(unique: true)
   String username;
+
   String password;
+
+  @Index(unique: true)
   String email;
 
   User({
@@ -15,13 +20,4 @@ class User {
     required this.email,
   });
 
-  String getUsername(){
-    return username;
-  }
-  String getPassword(){
-    return password;
-  }
-  String getEmail(){
-    return email;
-  }
 }

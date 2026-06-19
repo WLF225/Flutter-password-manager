@@ -2,6 +2,7 @@ import 'package:bcrypt/bcrypt.dart';
 import 'package:finalproject/user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:isar/isar.dart';
+import 'package:finalproject/account.dart';
 
 class Dao {
   late Future<Isar> db;
@@ -47,11 +48,20 @@ class Dao {
     }
   }
 
+  Future<void> addAccount(Account account, User user) async {
+    final isar = await db;
+    account.user.value = user;
+    await isar.writeTxn(() async {
+      await isar.accounts.put(account);
+      await account.user.save();
+    });
+  }
+
   Future<Isar> openDB() async {
     if (Isar.instanceNames.isEmpty) {
       final dir = await getApplicationDocumentsDirectory();
       return await Isar.open(
-        [UserSchema],
+        [UserSchema, AccountSchema],
         directory: dir.path,
         inspector: true,
       );

@@ -45,7 +45,7 @@ class ForgetPassword extends StatelessWidget {
                   return;
                 }
 
-                if (user.getUsername() != username) {
+                if (user.username != username) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Username does not match email"),
@@ -146,7 +146,7 @@ class _NewPasswordState extends State<NewPassword> {
                   return;
                 }
 
-                await Dao().updatePassword(user.getUsername(), newPass);
+                await Dao().updatePassword(user.username, newPass);
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

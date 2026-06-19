@@ -1,3 +1,5 @@
+import 'package:finalproject/AddAccount.dart';
+import 'package:finalproject/account.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/user.dart';
 import 'package:finalproject/dao.dart';
@@ -29,6 +31,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    List<Account> _items = [];
+
     return Scaffold(
       appBar: AppBar(title: const Text("Main Page")),
       body: Padding(
@@ -38,9 +43,27 @@ class _MainPageState extends State<MainPage> {
             : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Username: ${user!.getUsername()}"),
+            Text("Username: ${user!.username}"),
             const SizedBox(height: 10),
-            Text("Email: ${user!.getEmail()}"),
+            Text("Email: ${user!.email}"),
+            SizedBox(height: 10),
+            Expanded(child:
+            _items.isEmpty?
+            Center(child: Text("No items yet")):
+            ListView.builder(
+                itemBuilder: (context, index){
+                  return ListTile(
+                    leading: CircleAvatar(child: Text("${index + 1}")),
+                    title: Text(_items[index].toString()),
+                  );
+                }
+            )),
+            SizedBox(height: 10),
+            ElevatedButton(onPressed:(){ Navigator.push(
+              context,
+                MaterialPageRoute(
+                    builder: (context) => const AddAccountPage())
+            );},child: Text("Add account"))
           ],
         ),
       ),
