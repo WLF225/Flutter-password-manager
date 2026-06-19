@@ -2,6 +2,7 @@ import 'package:finalproject/dao.dart';
 import 'package:finalproject/user.dart';
 import 'package:flutter/material.dart';
 import 'package:bcrypt/bcrypt.dart';
+import 'package:email_validator/email_validator.dart';
 
 
 class CreateAccount extends StatefulWidget {
@@ -42,6 +43,17 @@ class _CreateAccountState extends State<CreateAccount> {
           content: Text('Passwords does not match!'),
           duration: Duration(seconds: 2),
           backgroundColor: Colors.green,
+        ),
+      );
+      return;
+    }
+
+    if(EmailValidator.validate(email)){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Wrong email format!'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
         ),
       );
       return;
