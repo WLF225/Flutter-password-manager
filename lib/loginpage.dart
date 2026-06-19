@@ -5,6 +5,7 @@ import 'package:finalproject/user.dart';
 import 'package:flutter/material.dart';
 import 'createaccount.dart';
 import 'forgetpassword.dart';
+import 'session.dart';
 import 'dart:developer';
 
 class LoginPage extends StatefulWidget {
@@ -33,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    Dao dao = Dao();
+    Dao dao = Dao.getInstance();
     User? user = await dao.getUserByUsername(username);
 
     if (user == null || !BCrypt.checkpw(password, user.password)) {
@@ -47,6 +48,8 @@ class _LoginPageState extends State<LoginPage> {
       );
       return;
     }
+
+    AppSession.getInstance().currentUser = user;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

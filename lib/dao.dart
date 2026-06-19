@@ -5,9 +5,12 @@ import 'package:isar/isar.dart';
 import 'package:finalproject/account.dart';
 
 class Dao {
+  static final Dao _instance = Dao._internal();
+  static Dao getInstance() => _instance;
+
   late Future<Isar> db;
 
-  Dao() {
+  Dao._internal() {
     db = openDB();
   }
 
@@ -65,6 +68,14 @@ class Dao {
       await isar.accounts.put(account);
       await account.user.save();
     });
+  }
+
+  Future<List<Account>> getAccountsByUser(User user) async {
+    final isar = await db;
+    return await isar.accounts
+        .filter()
+        .user((q) => q.idEqualTo(user.id))
+        .findAll();
   }
 
   Future<Isar> openDB() async {

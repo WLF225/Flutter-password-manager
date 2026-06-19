@@ -1,50 +1,76 @@
 import 'package:flutter/material.dart';
+import 'account.dart';
+import 'dao.dart';
+import 'session.dart';
 
-class AddAccountPage extends StatefulWidget{
-    const AddAccountPage({super.key});
+class AddAccountPage extends StatefulWidget {
+  const AddAccountPage({super.key});
 
-    @override
-    State<AddAccountPage> createState() => _AddAccountPageState();
+  @override
+  State<AddAccountPage> createState() => _AddAccountPageState();
 }
 
-class _AddAccountPageState extends State<AddAccountPage>{
-   
+class _AddAccountPageState extends State<AddAccountPage> {
   final TextEditingController _websiteNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
-  void _addNewAccount() async{
-    
+
+  void _addNewAccount() async {
+    final website = _websiteNameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    final account = Account(
+      websiteName: website,
+      email: email,
+      password: password,
+    );
+
+    final currentUser = AppSession.getInstance().currentUser;
+    if (currentUser == null) return;
+
+    await Dao.getInstance().addAccount(account, currentUser);
+
+    if (mounted) Navigator.pop(context);
   }
-  
+
+  @override
+  void dispose() {
+    _websiteNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Add new Account")),
       body: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         height: double.infinity,
         width: double.infinity,
         child: Column(
           children: [
             TextField(
               controller: _websiteNameController,
-              decoration: InputDecoration(labelText: 'Website name'),
+              decoration: const InputDecoration(labelText: 'Website name'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email or username'),
+              decoration: const InputDecoration(labelText: 'Email or username'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
-                onPressed: _addNewAccount,
-                child: Text("Add account"))
+              onPressed: _addNewAccount,
+              child: const Text("Add account"),
+            )
           ],
         ),
       ),

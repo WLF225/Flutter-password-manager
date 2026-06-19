@@ -3,6 +3,9 @@ import 'package:finalproject/account.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/user.dart';
 import 'package:finalproject/dao.dart';
+import 'package:finalproject/session.dart';
+
+import 'accountcard.dart';
 
 class MainPage extends StatefulWidget {
   final String email;
@@ -15,6 +18,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   User? user;
+  List<Account> _accounts = [];
 
   @override
   void initState() {
@@ -23,17 +27,26 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<void> loadUser() async {
-    final result = await Dao().getUserByEmail(widget.email);
+    final result = await Dao.getInstance().getUserByEmail(widget.email);
+    AppSession.getInstance().currentUser = result;
     setState(() {
       user = result;
+    });
+    if (result != null) {
+      await loadAccounts();
+    }
+  }
+
+  Future<void> loadAccounts() async {
+    if (user == null) return;
+    final result = await Dao.getInstance().getAccountsByUser(user!);
+    setState(() {
+      _accounts = result;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
-    List<Account> _items = [];
-
     return Scaffold(
       appBar: AppBar(title: const Text("Main Page")),
       body: Padding(
@@ -46,24 +59,30 @@ class _MainPageState extends State<MainPage> {
             Text("Username: ${user!.username}"),
             const SizedBox(height: 10),
             Text("Email: ${user!.email}"),
-            SizedBox(height: 10),
-            Expanded(child:
-            _items.isEmpty?
-            Center(child: Text("No items yet")):
-            ListView.builder(
-                itemBuilder: (context, index){
-                  return ListTile(
-                    leading: CircleAvatar(child: Text("${index + 1}")),
-                    title: Text(_items[index].toString()),
-                  );
-                }
-            )),
-            SizedBox(height: 10),
-            ElevatedButton(onPressed:(){ Navigator.push(
-              context,
-                MaterialPageRoute(
-                    builder: (context) => const AddAccountPage())
-            );},child: Text("Add account"))
+            const SizedBox(height: 10),
+            Expanded(
+              child: _accounts.isEmpty
+                  ? const Center(child: Text("No items yet"))
+                  : ListView.builder(
+                itemCount: _accounts.length,
+                itemBuilder: (context, index) {
+                  return AccountCard(account: _accounts[index]);
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddAccountPage(),
+                  ),
+                );
+                await loadAccounts();
+              },
+              child: const Text("Add account"),
+            ),
           ],
         ),
       ),

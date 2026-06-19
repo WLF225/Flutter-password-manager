@@ -33,7 +33,7 @@ class ForgetPassword extends StatelessWidget {
                 final username = usernameController.text;
                 final email = emailController.text;
 
-                final user = await Dao().getUserByEmail(email);
+                final user = await Dao.getInstance().getUserByEmail(email);
 
                 if (user == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -134,7 +134,7 @@ class _NewPasswordState extends State<NewPassword> {
                   return;
                 }
 
-                final user = await Dao().getUserByEmail(widget.email);
+                final user = await Dao.getInstance().getUserByEmail(widget.email);
 
                 if (user == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -146,7 +146,7 @@ class _NewPasswordState extends State<NewPassword> {
                   return;
                 }
 
-                await Dao().updatePassword(user.username, newPass);
+                await Dao.getInstance().updatePassword(user.username, newPass);
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

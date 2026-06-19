@@ -9,7 +9,7 @@ class CreateAccount extends StatefulWidget {
 
   @override
   State<CreateAccount> createState() => _CreateAccountState();
-  
+
 }
 
 class _CreateAccountState extends State<CreateAccount> {
@@ -24,7 +24,7 @@ class _CreateAccountState extends State<CreateAccount> {
     String password = _passwordController.text;
     String confirmPassword = _confirmPasswordController.text;
     String email = _emailController.text;
-    
+
     if (username.isEmpty || password.isEmpty || confirmPassword.isEmpty || email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -47,7 +47,7 @@ class _CreateAccountState extends State<CreateAccount> {
       return;
     }
 
-    Dao dao = Dao();
+    Dao dao = Dao.getInstance();
 
     password = BCrypt.hashpw(password, BCrypt.gensalt());
     if(!await dao.isUniqueUsername(username)){
@@ -87,54 +87,54 @@ class _CreateAccountState extends State<CreateAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Create Account'),
+      appBar: AppBar(
+        title: const Text('Create Account'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(15),
+        height: double.infinity,
+        width: double.infinity,
+        child: Column(
+          children: [
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(
+                labelText: 'Username',
+              ),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(
+                labelText: 'Password',
+              ),
+              obscureText: true,
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: _confirmPasswordController,
+              decoration: InputDecoration(
+                labelText: 'Confirm Password',
+              ),
+              obscureText: true,
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: 'Email',
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                _createAccount();
+              },
+              child: Text('Create Account'),
+            ),
+          ],
         ),
-        body: Container(
-          padding: EdgeInsets.all(15),
-            height: double.infinity,
-            width: double.infinity,
-          child: Column(
-            children: [
-              TextField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                ),
-                obscureText: true,
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: _confirmPasswordController,
-                decoration: InputDecoration(
-                  labelText: 'Confirm Password',
-                ),
-                obscureText: true,
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _createAccount();
-                },
-                child: Text('Create Account'),
-              ),
-            ],
-          ),
-        ),
-      );
+      ),
+    );
   }
 }
