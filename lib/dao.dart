@@ -78,6 +78,20 @@ class Dao {
         .findAll();
   }
 
+  Future<void> updateAccount(Account account) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.accounts.put(account);
+    });
+  }
+
+  Future<void> deleteAccount(int id) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.accounts.delete(id);
+    });
+  }
+
   Future<Isar> openDB() async {
     if (Isar.instanceNames.isEmpty) {
       final dir = await getApplicationDocumentsDirectory();

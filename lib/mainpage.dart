@@ -82,7 +82,7 @@ class _MainPageState extends State<MainPage> {
                   : ListView.builder(
                 itemCount: _accounts.length,
                 itemBuilder: (context, index) {
-                  return AccountCard(account: _accounts[index]);
+                  return AccountCard(account: _accounts[index], onChanged: loadAccounts);
                 },
               ),
             ),
