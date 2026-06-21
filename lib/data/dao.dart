@@ -1,12 +1,17 @@
 import 'package:bcrypt/bcrypt.dart';
-import 'package:finalproject/user.dart';
+import 'package:encrypt/encrypt.dart' as enc;
+import 'package:finalproject/models/user.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:isar/isar.dart';
-import 'package:finalproject/account.dart';
+import 'package:finalproject/models/account.dart';
 
 class Dao {
   static final Dao _instance = Dao._internal();
   static Dao getInstance() => _instance;
+
+  // ponytail: static key, fine for prototype — use flutter_secure_storage if shipping
+  static final _aesKey = enc.Key.fromLength(32);
+  static final _encrypter = enc.Encrypter(enc.AES(_aesKey));
 
   late Future<Isar> db;
 
@@ -63,6 +68,8 @@ class Dao {
 
   Future<void> addAccount(Account account, User user) async {
     final isar = await db;
+    final iv = enc.IV.fromSecureRandom(16);
+    account.password = '${iv.base64}:${_encrypter.encrypt(account.password, iv: iv).base64}';
     account.user.value = user;
     await isar.writeTxn(() async {
       await isar.accounts.put(account);
@@ -72,14 +79,23 @@ class Dao {
 
   Future<List<Account>> getAccountsByUser(User user) async {
     final isar = await db;
-    return await isar.accounts
+    final accounts = await isar.accounts
         .filter()
         .user((q) => q.idEqualTo(user.id))
         .findAll();
+    for (final account in accounts) {
+      final parts = account.password.split(':');
+      if (parts.length == 2) {
+        account.password = _encrypter.decrypt64(parts[1], iv: enc.IV.fromBase64(parts[0]));
+      }
+    }
+    return accounts;
   }
 
   Future<void> updateAccount(Account account) async {
     final isar = await db;
+    final iv = enc.IV.fromSecureRandom(16);
+    account.password = '${iv.base64}:${_encrypter.encrypt(account.password, iv: iv).base64}';
     await isar.writeTxn(() async {
       await isar.accounts.put(account);
     });

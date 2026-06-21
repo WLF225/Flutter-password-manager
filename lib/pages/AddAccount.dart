@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'account.dart';
-import 'dao.dart';
-import 'session.dart';
+import 'package:finalproject/models/account.dart';
+import 'package:finalproject/data/dao.dart';
+import 'package:finalproject/models/user.dart';
 
 class AddAccountPage extends StatefulWidget {
-  const AddAccountPage({super.key});
+  final User user;
+
+  const AddAccountPage({super.key, required this.user});
 
   @override
   State<AddAccountPage> createState() => _AddAccountPageState();
@@ -20,16 +22,23 @@ class _AddAccountPageState extends State<AddAccountPage> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
+    if (website.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('All fields are required!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     final account = Account(
       websiteName: website,
       email: email,
       password: password,
     );
 
-    final currentUser = AppSession.getInstance().currentUser;
-    if (currentUser == null) return;
-
-    await Dao.getInstance().addAccount(account, currentUser);
+    await Dao.getInstance().addAccount(account, widget.user);
 
     if (mounted) Navigator.pop(context);
   }

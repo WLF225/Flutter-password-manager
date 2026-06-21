@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'account.dart';
-import 'dao.dart';
+import 'package:finalproject/models/account.dart';
+import 'package:finalproject/data/dao.dart';
 
 class AccountCard extends StatefulWidget {
   final Account account;

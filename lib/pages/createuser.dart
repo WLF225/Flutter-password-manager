@@ -1,5 +1,5 @@
-import 'package:finalproject/dao.dart';
-import 'package:finalproject/user.dart';
+import 'package:finalproject/data/dao.dart';
+import 'package:finalproject/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:bcrypt/bcrypt.dart';
 import 'package:email_validator/email_validator.dart';
@@ -19,19 +19,19 @@ class _CreateAccountState extends State<CreateUser> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-
   Future<void> _createAccount() async {
-    String username = _usernameController.text;
-    String password = _passwordController.text;
-    String confirmPassword = _confirmPasswordController.text;
-    String email = _emailController.text;
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+    String confirmPassword = _confirmPasswordController.text.trim();
+    String email = _emailController.text.trim();
 
-    if (username.isEmpty || password.isEmpty || confirmPassword.isEmpty || email.isEmpty) {
+    if (username.isEmpty || password.isEmpty || confirmPassword.isEmpty ||
+        email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('All fields are required!'),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.red,
         ),
       );
       return;
@@ -42,7 +42,7 @@ class _CreateAccountState extends State<CreateUser> {
         SnackBar(
           content: Text('Passwords does not match!'),
           duration: Duration(seconds: 2),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.red,
         ),
       );
       return;
@@ -84,7 +84,11 @@ class _CreateAccountState extends State<CreateUser> {
       return;
     }
 
-    dao.addUser(User(username: username, password: password, email: email));
+    dao.addUser(User(
+      username: username,
+      password: password,
+      email: email,
+    ));
     Navigator.pop(context);
 
     ScaffoldMessenger.of(context).showSnackBar(

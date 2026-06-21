@@ -1,6 +1,7 @@
-import 'package:finalproject/loginpage.dart';
+import 'package:finalproject/pages/loginpage.dart';
+import 'package:finalproject/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:finalproject/dao.dart';
+import 'package:finalproject/data/dao.dart';
 
 class ForgetPassword extends StatelessWidget {
   const ForgetPassword({super.key});
@@ -30,25 +31,25 @@ class ForgetPassword extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                final username = usernameController.text;
-                final email = emailController.text;
+                final username = usernameController.text.trim();
+                final email = emailController.text.trim();
 
-                final user = await Dao.getInstance().getUserByEmail(email);
-
-                if (user == null) {
+                if (username.isEmpty || email.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Email not found"),
+                      content: Text("All fields are required"),
                       backgroundColor: Colors.red,
                     ),
                   );
                   return;
                 }
 
-                if (user.username != username) {
+                final user = await Dao.getInstance().getUserByEmail(email);
+
+                if (user == null || user.username != username) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Username does not match email"),
+                      content: Text("Username or email not found"),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -58,7 +59,7 @@ class ForgetPassword extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NewPassword(email: email),
+                    builder: (context) => NewPassword(user: user),
                   ),
                 );
               },
@@ -71,22 +72,16 @@ class ForgetPassword extends StatelessWidget {
   }
 }
 
-class NewPassword extends StatefulWidget {
-  final String email;
+class NewPassword extends StatelessWidget {
+  final User user;
 
-  const NewPassword({super.key, required this.email});
-
-  @override
-  State<NewPassword> createState() => _NewPasswordState();
-}
-
-class _NewPasswordState extends State<NewPassword> {
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-  TextEditingController();
+  const NewPassword({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+
     return Scaffold(
       appBar: AppBar(title: const Text('New Password')),
       body: Container(
@@ -111,8 +106,8 @@ class _NewPasswordState extends State<NewPassword> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                final newPass = newPasswordController.text;
-                final confirmPass = confirmPasswordController.text;
+                final newPass = newPasswordController.text.trim();
+                final confirmPass = confirmPasswordController.text.trim();
 
                 if (newPass.isEmpty || confirmPass.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -134,19 +129,8 @@ class _NewPasswordState extends State<NewPassword> {
                   return;
                 }
 
-                final user = await Dao.getInstance().getUserByEmail(widget.email);
-
-                if (user == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("User not found"),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-
-                await Dao.getInstance().updatePassword(user.username, newPass);
+                await Dao.getInstance()
+                    .updatePassword(user.username, newPass);
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -155,7 +139,8 @@ class _NewPasswordState extends State<NewPassword> {
                   ),
                 );
 
-                Navigator.push(context,
+                Navigator.pushReplacement(
+                  context,
                   MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },

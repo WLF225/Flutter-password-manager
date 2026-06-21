@@ -1,11 +1,9 @@
-import 'package:finalproject/AddAccount.dart';
-import 'package:finalproject/account.dart';
+import 'package:finalproject/pages/AddAccount.dart';
+import 'package:finalproject/models/account.dart';
 import 'package:flutter/material.dart';
-import 'package:finalproject/user.dart';
-import 'package:finalproject/dao.dart';
-import 'package:finalproject/session.dart';
-
-import 'accountcard.dart';
+import 'package:finalproject/models/user.dart';
+import 'package:finalproject/data/dao.dart';
+import 'package:finalproject/pages/accountcard.dart';
 
 class MainPage extends StatefulWidget {
   final String email;
@@ -28,7 +26,6 @@ class _MainPageState extends State<MainPage> {
 
   Future<void> loadUser() async {
     final result = await Dao.getInstance().getUserByEmail(widget.email);
-    AppSession.getInstance().currentUser = result;
     setState(() {
       user = result;
     });
@@ -68,7 +65,7 @@ class _MainPageState extends State<MainPage> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const AddAccountPage(),
+                    builder: (context) => AddAccountPage(user: user!),
                   ),
                 );
                 await loadAccounts();

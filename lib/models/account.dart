@@ -1,4 +1,4 @@
-import 'package:finalproject/user.dart';
+import 'user.dart';
 import 'package:isar/isar.dart';
 
 part 'account.g.dart';

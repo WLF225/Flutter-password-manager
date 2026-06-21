@@ -1,11 +1,10 @@
 import 'package:bcrypt/bcrypt.dart';
-import 'package:finalproject/dao.dart';
-import 'package:finalproject/mainpage.dart';
-import 'package:finalproject/user.dart';
+import 'package:finalproject/data/dao.dart';
+import 'package:finalproject/pages/mainpage.dart';
+import 'package:finalproject/models/user.dart';
 import 'package:flutter/material.dart';
 import 'createuser.dart';
 import 'forgetpassword.dart';
-import 'session.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -36,7 +35,6 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    AppSession.getInstance().currentUser = user;
     _showSnackBar('Login successfully!', Colors.green);
     Navigator.push(
       context,
