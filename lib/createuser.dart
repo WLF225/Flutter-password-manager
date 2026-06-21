@@ -48,7 +48,7 @@ class _CreateAccountState extends State<CreateUser> {
       return;
     }
 
-    if(EmailValidator.validate(email)){
+    if(!EmailValidator.validate(email)){
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Wrong email format!'),
