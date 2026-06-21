@@ -5,15 +5,15 @@ import 'package:bcrypt/bcrypt.dart';
 import 'package:email_validator/email_validator.dart';
 
 
-class CreateAccount extends StatefulWidget {
-  const CreateAccount({super.key});
+class CreateUser extends StatefulWidget {
+  const CreateUser({super.key});
 
   @override
-  State<CreateAccount> createState() => _CreateAccountState();
+  State<CreateUser> createState() => _CreateAccountState();
 
 }
 
-class _CreateAccountState extends State<CreateAccount> {
+class _CreateAccountState extends State<CreateUser> {
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();

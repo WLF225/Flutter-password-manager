@@ -3,7 +3,7 @@ import 'package:finalproject/dao.dart';
 import 'package:finalproject/mainpage.dart';
 import 'package:finalproject/user.dart';
 import 'package:flutter/material.dart';
-import 'createaccount.dart';
+import 'createuser.dart';
 import 'forgetpassword.dart';
 import 'session.dart';
 import 'dart:developer';
@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CreateAccount(),
+                    builder: (context) => const CreateUser(),
                   ),
                 );
               },
