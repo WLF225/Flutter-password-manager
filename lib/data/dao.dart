@@ -9,7 +9,6 @@ class Dao {
   static final Dao _instance = Dao._internal();
   static Dao getInstance() => _instance;
 
-  // ponytail: static key, fine for prototype — use flutter_secure_storage if shipping
   static final _aesKey = enc.Key.fromLength(32);
   static final _encrypter = enc.Encrypter(enc.AES(_aesKey));
 
