@@ -56,21 +56,13 @@ class _MainPageState extends State<MainPage> {
             : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Username: ${user!.username}"),
-            const SizedBox(height: 10),
-            Text("Email: ${user!.email}"),
-            const SizedBox(height: 10),
-            Expanded(
-              child: _accounts.isEmpty
-                  ? const Center(child: Text("No items yet"))
-                  : ListView.builder(
-                itemCount: _accounts.length,
-                itemBuilder: (context, index) {
-                  return AccountCard(account: _accounts[index]);
-                },
+            Text(
+              "Welcome, ${user!.username}",
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
+            const Divider(),
             ElevatedButton(
               onPressed: () async {
                 await Navigator.push(
@@ -82,6 +74,17 @@ class _MainPageState extends State<MainPage> {
                 await loadAccounts();
               },
               child: const Text("Add account"),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: _accounts.isEmpty
+                  ? const Center(child: Text("No items yet"))
+                  : ListView.builder(
+                itemCount: _accounts.length,
+                itemBuilder: (context, index) {
+                  return AccountCard(account: _accounts[index]);
+                },
+              ),
             ),
           ],
         ),
