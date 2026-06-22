@@ -9,7 +9,7 @@ class Dao {
   static final Dao _instance = Dao._internal();
   static Dao getInstance() => _instance;
 
-  static final _aesKey = enc.Key.fromLength(32);
+  static final _aesKey = enc.Key.fromUtf8('myEncryptionKey1230206'.padRight(32));
   static final _encrypter = enc.Encrypter(enc.AES(_aesKey));
 
   late Future<Isar> db;
@@ -85,7 +85,11 @@ class Dao {
     for (final account in accounts) {
       final parts = account.password.split(':');
       if (parts.length == 2) {
-        account.password = _encrypter.decrypt64(parts[1], iv: enc.IV.fromBase64(parts[0]));
+        try {
+          account.password = _encrypter.decrypt64(parts[1], iv: enc.IV.fromBase64(parts[0]));
+        } catch (e) {
+          account.password = "[Decryption Error]";
+        }
       }
     }
     return accounts;

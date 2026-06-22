@@ -84,12 +84,12 @@ class _CreateAccountState extends State<CreateUser> {
       return;
     }
 
-    dao.addUser(User(
+    await dao.addUser(User(
       username: username,
       password: password,
       email: email,
     ));
-    Navigator.pop(context);
+    if (mounted) Navigator.pop(context);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
