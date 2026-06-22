@@ -95,7 +95,7 @@ class _AccountCardState extends State<AccountCard> {
               ],
             ),
             const SizedBox(height: 8),
-            Text("Email: ${widget.account.email}"),
+            Text("Email or username: ${widget.account.email}"),
             const SizedBox(height: 4),
             Row(
               children: [
